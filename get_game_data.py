@@ -10,6 +10,7 @@ GAME_CODE_EXTENSION = ".go"
 GAME_COMPILE_COMMAND = ["go", "build"]
 
 
+
 def find_all_game_paths(source):
     game_paths = []
 
@@ -19,10 +20,9 @@ def find_all_game_paths(source):
                 path = os.path.join(source, directory)
                 game_paths.append(path)
 
-        break
 
+        break 
     return game_paths
-
 
 def get_name_from_paths(paths, to_strip):
     new_names = []
@@ -30,21 +30,20 @@ def get_name_from_paths(paths, to_strip):
         _, dir_name = os.path.split(path)
         new_dir_name = dir_name.replace(to_strip, "")
         new_names.append(new_dir_name)
-
+        
     return new_names
+
 
 
 def create_dir(path):
     if not os.path.exists(path):
         os.mkdir(path)
 
-
 def copy_and_overwrite(source, dest):
     if os.path.exists(dest):
         shutil.rmtree(dest)
     shutil.copytree(source, dest)
-
-
+    
 def make_json_metadata_file(path, game_dirs):
     data = {
         "gameNames": game_dirs,
@@ -62,13 +61,12 @@ def compile_game_code(path):
             if file.endswith(GAME_CODE_EXTENSION):
                 code_file_name = file
                 break
-
         break
 
     if code_file_name is None:
-        return
-
-    command = GAME_COMPILE_COMMAND + [code_file_name]
+        return 
+    
+    command = GAME_COMPILE_COMMAND +[code_file_name]
     run_command(command, path)
 
 
@@ -88,7 +86,7 @@ def main(source, target):
 
     game_paths = find_all_game_paths(source_path)
     new_game_dirs = get_name_from_paths(game_paths, "_game")
-
+    
     create_dir(target_path)
 
     for src, dest in zip(game_paths, new_game_dirs):
@@ -98,12 +96,18 @@ def main(source, target):
 
     json_path = os.path.join(target_path, "metadata.json")
     make_json_metadata_file(json_path, new_game_dirs)
+    
+  
 
 
-if __name__ == "__main__":
+
+
+
+if __name__=="__main__":
     args = sys.argv
+    print(args)
     if len(args) != 3:
         raise Exception("You must pass a source and target directory - only.")
-
-    source, target = args[1:]
+    
+    source, target = sys.argv[1:]
     main(source, target)
